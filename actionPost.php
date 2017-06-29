@@ -32,8 +32,13 @@ if(strlen($_POST['musician'])!=0)
 
         if($insertFindArray)
         {
-            foreach ($insertFindArray as $value)
+            foreach ($insertFindArray as $key => $value)
             {
+                if($key == "collectionviewurl")
+                {
+                    echo "<td><a href='$value'>Ituens</a></td>";
+                }
+                else
                 echo "<td>$value</td>";
             }
             echo "<td>База данных</td>";
@@ -56,7 +61,7 @@ if(strlen($_POST['musician'])!=0)
                      <td>$collectionName</td>
                      <td>$artistId</td>
                      <td>$artistName</td>
-                     <td>$collectionViewUrl</td>
+                     <td><a href='$collectionViewUrl'>Ituens</a></td>
                      <td>$trackCount</td>
                      <td>$collectionPrice</td>
                      <td>Itunes</td>";
