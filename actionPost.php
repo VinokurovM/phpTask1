@@ -9,7 +9,7 @@ if(strlen($_POST['musician'])!=0)
 
     $searchResult = file_get_contents($appAPI);                                                                                     // получаем таблицу json с itunesAPI
     $jsone = json_decode($searchResult);
-    $dbconnect = pg_connect("host = localhost port = 5432  dbname = phpTaskBase user = postgres password = 123");   // подключаемся к postrgeSQL
+    $bdconnect = pg_connect("host = localhost port = 5432  dbname = phpTaskBase user = postgres password = 123");   // подключаемся к postrgeSQL
     echo "<tr>
                 <td>ID альбома</td>
                 <td>Название альбома</td>
@@ -26,7 +26,7 @@ if(strlen($_POST['musician'])!=0)
         $array = $jsone->results[$i];
         $collectionId = $array->collectionId;
 
-        $insertFind = pg_query($dbconnect, "select * from musicianalbum where collectionid = $collectionId");             // проверка наличия collectionid в БД
+        $insertFind = pg_query($bdconnect, "select * from musicianalbum where collectionid = $collectionId");             // проверка наличия collectionid в БД
         $insertFindArray = pg_fetch_assoc($insertFind);
         echo "<tr>";
 
@@ -55,12 +55,12 @@ if(strlen($_POST['musician'])!=0)
 
             $insertLine = "insert into musicianalbum (collectionid,collectionname,artistid,artistname, collectionviewurl, trackcount, collectionprice) values ($collectionId,'$collectionName',$artistId,'$artistName',
             '$collectionViewUrl', $trackCount, $collectionPrice);";
-            $insert = pg_query($dbconnect, $insertLine);
+            $insert = pg_query($bdconnect, $insertLine);
 
                 echo "<td>$collectionId</td>
-                     <td>$collectionName</td>
+                     <td>$array->collectionName</td>
                      <td>$artistId</td>
-                     <td>$artistName</td>
+                     <td>$array->artistName</td>
                      <td><a href='$collectionViewUrl'>Ituens</a></td>
                      <td>$trackCount</td>
                      <td>$collectionPrice</td>
@@ -69,7 +69,7 @@ if(strlen($_POST['musician'])!=0)
         echo "</tr>";
     }
 
-    pg_close($dbconnect);
+    pg_close($bdconnect);
 
 }
 else
