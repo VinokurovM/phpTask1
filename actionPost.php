@@ -26,21 +26,21 @@ if(strlen($_POST['musician'])!=0)
         $array = $jsone->results[$i];
         $collectionId = $array->collectionId;
 
-        $insertFind = pg_query($dbconnect, "select collectionid from musicianalbum where collectionid = $collectionId");             // проверка наличия collectionid в БД
+        $insertFind = pg_query($dbconnect, "select * from musicianalbum where collectionid = $collectionId");             // проверка наличия collectionid в БД
         $insertFindArray = pg_fetch_assoc($insertFind);
         echo "<tr>";
 
-        if($insertFindArray) {
-            $insertFindBD = pg_query($dbconnect, "select * from musicianalbum where collectionid = $collectionId");
-            $insertFindBDArray = pg_fetch_assoc($insertFindBD);
-            foreach ($insertFindBDArray as $value)
+        if($insertFindArray)
+        {
+            foreach ($insertFindArray as $value)
             {
                 echo "<td>$value</td>";
             }
             echo "<td>База данных</td>";
 
         }
-        else{
+        else
+            {
             $artistName = str_replace("'","''",$array->artistName);
             $artistId = $array->artistId;
             $collectionName = str_replace("'","''",$array->collectionName);
@@ -48,33 +48,34 @@ if(strlen($_POST['musician'])!=0)
             $collectionPrice = $array->collectionPrice;
             $trackCount = $array->trackCount;
 
-            $insertLine = "insert into musicianalbum (collectionid,collectionname,artistid,artistname, collectionviewurl, trackcount, collectionprice) values ($collectionId,'$collectionName',$artistId,'$artistName', '$collectionViewUrl', $trackCount, $collectionPrice);
-";
+            $insertLine = "insert into musicianalbum (collectionid,collectionname,artistid,artistname, collectionviewurl, trackcount, collectionprice) values ($collectionId,'$collectionName',$artistId,'$artistName',
+            '$collectionViewUrl', $trackCount, $collectionPrice);";
             $insert = pg_query($dbconnect, $insertLine);
-            if(!$insert) {
-                echo "<br>Error! $collectionName<br>";
+
+                echo "<td>$collectionId</td>
+                     <td>$collectionName</td>
+                     <td>$artistId</td>
+                     <td>$artistName</td>
+                     <td>$collectionViewUrl</td>
+                     <td>$trackCount</td>
+                     <td>$collectionPrice</td>
+                     <td>Itunes</td>";
             }
-            echo "<td>$collectionId</td>
-                  <td>$collectionName</td>
-                  <td>$artistId</td>
-                  <td>$artistName</td>
-                  <td>$collectionViewUrl</td>
-                  <td>$trackCount</td>
-                  <td>$collectionPrice</td>
-                   <td>Itunes</td>";
-        }
         echo "</tr>";
     }
 
-
     pg_close($dbconnect);
-
 
 }
 else
 {
     echo "Поле пустое";
 }
+
+echo "<form action=\"actionPost.php\" method=\"post\">
+    <p>Имя: <input type=\"text\" name=\"musician\"/></p>
+    <p><input type=\"submit\"/> </p>
+</form>"
 
 /*
 создание таблицы
@@ -88,8 +89,6 @@ collectionviewurl text,
 trackcount int,
 collectionprice int);
 
-
-insert into musicianalbum (collectionid,collectionname,artistid,artistname, collectionviewurl, trackcount, collectionprice) values (123,'text',457,'text', 'text', 111, 111);
 
 */
 ?>
